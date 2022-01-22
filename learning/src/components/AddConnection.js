@@ -14,11 +14,13 @@ function AddConnection() {
       type: "application/json",
       data: {
         name: userInfo["name"],
-        userMail: userInfo["email"],
-        addMail: email,
+        mail: userInfo["email"],
+        friend: email,
       },
     });
     if (response.data["status"] === 200) {
+      alert(response.data["message"]);
+      window.location.reload(false);
     } else {
       alert(response.data["message"]);
     }

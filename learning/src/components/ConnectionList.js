@@ -12,11 +12,13 @@ function ConnectionList() {
     if (!loggedInUser) {
       navigate("/login", { replace: true });
     }
-  }, []);
+  }, [navigate]);
 
   const [reciever, setReciever] = useState("");
-
+  const [chatInfo, setChatInfo] = useState();
   const [connections, setConnections] = useState([]);
+  let chatData;
+
   const getConnectionInfo = async (e) => {
     const userData = JSON.parse(localStorage.getItem("userData"));
     const response = await axios({
@@ -27,7 +29,6 @@ function ConnectionList() {
         email: userData["email"],
       },
     });
-    console.log(response.data["connections"]);
     setConnections(
       response.data["connections"].map((connection, i) => {
         return (
@@ -35,7 +36,7 @@ function ConnectionList() {
             key={i}
             email={connection["email"]}
             name={connection["name"]}
-            setReciver={setReciever}
+            setReciever={setReciever}
           />
         );
       })
@@ -44,10 +45,27 @@ function ConnectionList() {
   useEffect(() => {
     getConnectionInfo();
   }, []);
+  useEffect(() => {
+    if (reciever === "") {
+      setChatInfo("Select someone to chat with or add connections");
+    } else {
+      setChatInfo("Sending messages to " + reciever);
+    }
+  }, [reciever]);
 
-  let chatInfo = "Select Someone to chat with or add connections";
   if (reciever !== "") {
-    chatInfo = "Sending messages to " + reciever;
+    chatData = (
+      <div>
+        <Chatbox reciever={reciever} />
+        <button
+          onClick={() => {
+            setReciever("");
+          }}
+        >
+          Close Chat
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -55,7 +73,7 @@ function ConnectionList() {
       <AddConnection />
       {connections}
       {chatInfo}
-      <Chatbox reciver={reciever} />
+      {chatData}
     </div>
   );
 }

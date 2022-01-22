@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-export default function Messagetext({ messages, setMessages, reciever }) {
-  const [message, setMessage] = useState();
+export default function Messagetext({ reciever, setSentMessage }) {
+  const [toSend, setToSend] = useState("");
   const submitMessage = async (e) => {
+    e.preventDefault();
     const userData = JSON.parse(localStorage.getItem("userData"));
     const response = await axios({
       method: "post",
@@ -12,21 +13,25 @@ export default function Messagetext({ messages, setMessages, reciever }) {
       data: {
         sender: userData["email"],
         reciever: reciever,
-        message: message,
+        message: toSend,
       },
     });
-    setMessage("");
-    console.log(response.data["connections"]);
+    console.log(response.data);
+    if (response.data["status"] !== 200) {
+      alert(response.data["message"]);
+    }
+    setSentMessage(toSend);
+    setToSend("");
   };
   return (
     <div>
       <input
-        onChange={(e) => setMessage(e.target.value)}
-        value={message}
+        onChange={({ target }) => setToSend(target.value)}
+        value={toSend}
         type="text"
         placeholder="Type your message....."
       ></input>
-      <button onClick={() => submitMessage}>Send</button>
+      <button onClick={submitMessage}>Send</button>
     </div>
   );
 }
