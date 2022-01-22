@@ -34,6 +34,12 @@ def sendMessage():
     output = insertMessage(userData)
     return output
 
+@app.route('/getMessages', methods=["POST"])
+def getMessages():
+    userData = request.get_json()
+    output = returnMessages(userData)
+    return output
+
 # @app.route('/identical-api/<currid>',methods=["GET"])
 # def newpage_api(currid):
 #     return jsonify(search(currid))
