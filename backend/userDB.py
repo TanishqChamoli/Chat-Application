@@ -1,3 +1,4 @@
+from urllib import response
 import pymongo
 import base64
 from Crypto.PublicKey import RSA
@@ -97,7 +98,8 @@ def insertMessage(userData):
         "reciever": userData['reciever'],
         "senderData": senderData,
         "recieverData": recieverData,
-        "date": datetime.datetime.now()
+        "date": datetime.datetime.now(),
+        "status":False
     })
     if messageInDb.acknowledged:
         return {'status': 200, 'message': 'Success'}
@@ -108,26 +110,42 @@ def returnMessages(userData):
     try:
         messageData = []
         senderPri = userDB.find_one({"email": userData['own']}, {'_id': 0, 'priKey': 1})
-        messages = list(chatDB.find({"$or": [{'sender': userData['friend'],'reciever':userData['own']},{'sender': userData['own'],'reciever':userData['friend']}]}, {'_id': 0}).sort('date',pymongo.DESCENDING).limit(10))
+        messages = list(chatDB.find({"$or": [{'sender': userData['friend'],'reciever':userData['own']},{'sender': userData['own'],'reciever':userData['friend']}]}, {'_id': 0}).sort('date',pymongo.DESCENDING) )
         messages = messages[::-1]
         for message in messages:
             if message['sender']==userData['own']:
                 decMessage = decryptText(senderPri['priKey'], message['senderData'])
             else:
                 decMessage = decryptText(senderPri['priKey'],message['recieverData'])
-                # call the update status function and set the value as true
             message['message']=decMessage.decode('utf-8')
-
             message.pop('senderData')
             message.pop('recieverData')
             message['date'] = str(message['date'].time().strftime("%H:%M"))
 
             messageData.append(message)
-        return {'status':200,'data':messageData}
+        response = updateMessageStatus(userData)
+        if response['status']==200:
+            return {'status':200,'data':messageData}
+        else:
+            return {'status':400,'message':response['message']}
     except Exception as e:
         return {'status':400,'message':f"Failed getting the messages due to error: {e}"}
 
+def checkMessages(userData):
+    mIds = list(chatDB.find({"$or": [{'sender': userData['friend'],'reciever':userData['own']},{'sender': userData['own'],'reciever':userData['friend']}]},{'_id':1}))
+    return {'status':200,'count':len(mIds)}
+
+def updateMessageStatus(userData):
+    updateStatus = chatDB.update_many({'sender': userData['friend'],'reciever':userData['own']},{'$set':{'status':True}})
+    if updateStatus.acknowledged:
+        return {'status':200,'message':'Successfull change the message status'}
+    else:
+        return {'status':400,'message':'Message status change failed'}
+
+
+
 if __name__ == '__main__':
-    print(returnMessages({'own': 'tanishq@tanishq.com', 'friend': 'sonam@sonam.com'}))
+    # print(returnMessages({'own': 'tanishq@tanishq.com', 'friend': 'sonam@sonam.com'}))
+    print(checkMessages({'own': 'tanishq@tanishq.com', 'friend': 'sonam@sonam.com'}))
     # pub,pri = getRsaInfo()
     # decryptText(pri,"Hello tanishq")

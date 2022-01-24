@@ -3,35 +3,103 @@ import Messagetext from "./Messagetext";
 import ChatContent from "./ChatContent";
 import axios from "axios";
 
+let timer;
+
 function Chatbox({ reciever }) {
   const [messages, setMessages] = useState([]);
-  const [sentMessage, setSentMessage] = useState("");
+  const [messageData, setMessageData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [newMessagesFound, setNewMessagesFound] = useState(0);
+  const userData = JSON.parse(localStorage.getItem("userData"));
 
   const getMessages = async (e) => {
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    const response = await axios({
-      method: "post",
-      url: "/getMessages",
-      type: "application/json",
-      data: {
-        own: userData["email"],
-        friend: reciever,
-      },
-    });
-    if (response.data["status"] !== 200) {
-      alert(response.data["message"]);
+    console.log("Called get messages");
+    try {
+      const response = await axios({
+        method: "post",
+        url: "/getMessages",
+        type: "application/json",
+        data: {
+          own: userData["email"],
+          friend: reciever,
+        },
+      });
+      if (response.data["status"] !== 200) {
+        alert(response.data["message"]);
+      } else {
+        return response.data["data"];
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      console.log("Got messages");
     }
-    return response.data;
+  };
+
+  const checkForMessage = async () => {
+    try {
+      const response = await axios({
+        method: "post",
+        url: "/checkForMessage",
+        type: "application/json",
+        data: {
+          own: userData["email"],
+          friend: reciever,
+        },
+      });
+      if (response.data["status"] === 200) {
+        if (response.data["count"] !== messages.length) {
+          console.log("New messages");
+          setNewMessagesFound(response.data["count"]);
+        }
+      } else {
+        console.log("not a 200");
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      clearTimeout(timer);
+      timer = setTimeout(checkForMessage, 5000);
+    }
   };
 
   useEffect(() => {
-    getMessages().then((response) => setMessages(response["data"]));
-  }, [reciever, sentMessage]);
+    setIsLoading(true);
+    getMessages().then((allMessages) => {
+      setMessageData(allMessages);
+    });
+  }, [reciever]);
+
+  useEffect(() => {
+    setMessages(messageData);
+    setIsLoading(false);
+  }, [messageData]);
+
+  useEffect(() => {
+    if (isLoading === false) {
+      getMessages().then((allMessages) => {
+        setMessageData(allMessages);
+      });
+    }
+  }, [newMessagesFound]);
+
+  useEffect(() => {
+    if (isLoading === false) {
+      checkForMessage();
+    }
+  }, [messages]);
 
   return (
-    <div>
-      <ChatContent messages={messages} />
-      <Messagetext reciever={reciever} setSentMessage={setSentMessage} />
+    <div className="chat-box">
+      {/* {console.count("counter")} */}
+      {isLoading ? (
+        "Please wait loading messages"
+      ) : messages.length === 0 ? (
+        "No messages, Say Hello"
+      ) : (
+        <ChatContent messages={messages} />
+      )}
+      <Messagetext reciever={reciever} />
     </div>
   );
 }

@@ -40,6 +40,12 @@ def getMessages():
     output = returnMessages(userData)
     return output
 
+@app.route('/checkForMessage', methods=["POST"])
+def checkForMessage():
+    userData = request.get_json()
+    output = checkMessages(userData)
+    return output
+
 # @app.route('/identical-api/<currid>',methods=["GET"])
 # def newpage_api(currid):
 #     return jsonify(search(currid))

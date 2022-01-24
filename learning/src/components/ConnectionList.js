@@ -69,11 +69,15 @@ function ConnectionList() {
   }
 
   return (
-    <div>
-      <AddConnection />
-      {connections}
-      {chatInfo}
-      {chatData}
+    <div className="containChat">
+      <div className="split-left">
+        <AddConnection />
+        {connections}
+      </div>
+      <div className="split-right">
+        {chatInfo}
+        {chatData}
+      </div>
     </div>
   );
 }

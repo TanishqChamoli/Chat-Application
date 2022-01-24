@@ -5,16 +5,20 @@ export default function ChatContent({ messages }) {
   var data = messages.map((message) => {
     if (userData["email"] === message["sender"]) {
       return (
-        <div className="sent">
-          <p className="message">{message["message"]}</p>
-          <sub className="date">{message["date"]}</sub>
+        <div className="sent" key={message["date"] + message["message"]}>
+          <p className="message">
+            {message["message"]}
+            <sub className="date">{message["date"]}</sub>
+          </p>
         </div>
       );
     } else {
       return (
-        <div className="recieved">
-          <p className="message">{message["message"]}</p>
-          <sub className="date">{message["date"]}</sub>
+        <div className="recieved" key={message["date"] + message["message"]}>
+          <p className="message">
+            {message["message"]}
+            <sub className="date">{message["date"]}</sub>
+          </p>
         </div>
       );
     }

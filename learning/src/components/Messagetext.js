@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-export default function Messagetext({ reciever, setSentMessage }) {
+export default function Messagetext({ reciever }) {
   const [toSend, setToSend] = useState("");
   const submitMessage = async (e) => {
     e.preventDefault();
@@ -20,7 +20,6 @@ export default function Messagetext({ reciever, setSentMessage }) {
     if (response.data["status"] !== 200) {
       alert(response.data["message"]);
     }
-    setSentMessage(toSend);
     setToSend("");
   };
   return (
