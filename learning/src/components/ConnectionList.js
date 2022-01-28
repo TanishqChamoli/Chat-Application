@@ -49,7 +49,7 @@ function ConnectionList() {
     if (reciever === "") {
       setChatInfo("Select someone to chat with or add connections");
     } else {
-      setChatInfo("Sending messages to " + reciever);
+      setChatInfo(reciever);
     }
   }, [reciever]);
 
@@ -57,25 +57,32 @@ function ConnectionList() {
     chatData = (
       <div>
         <Chatbox reciever={reciever} />
-        <button
-          onClick={() => {
-            setReciever("");
-          }}
-        >
-          Close Chat
-        </button>
       </div>
     );
   }
 
   return (
-    <div className="containChat">
-      <div className="split-left">
+    <div className="container-fluid">
+      <div className="col-md-3">
         <AddConnection />
         {connections}
       </div>
-      <div className="split-right">
-        {chatInfo}
+      <div className="col-md-9">
+        {reciever !== "" ? (
+          <div>
+            <button
+              onClick={() => {
+                setReciever("");
+              }}
+              className="btn btn-primary"
+            >
+              <i className="glyphicon glyphicon-remove"></i>
+            </button>
+            Talking to <strong>{chatInfo}</strong>
+          </div>
+        ) : (
+          ""
+        )}
         {chatData}
       </div>
     </div>

@@ -29,33 +29,41 @@ function LoginForm() {
   };
   if (localStorage.getItem("userData") !== null) {
     return (
-      <div>
-        Already logged in <LogoutButton />
+      <div className="align-center" style={{ justifyContent: "center" }}>
+        <strong>
+          Already logged in <LogoutButton />
+        </strong>
       </div>
     );
   }
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="email">Email: </label>
-      <input
-        type="text"
-        value={email}
-        placeholder="Enter your email"
-        required
-        onChange={({ target }) => setEmail(target.value)}
-      />
-      <br />
-      <label htmlFor="password">Password: </label>
-      <input
-        type="password"
-        value={password}
-        placeholder="Enter your password"
-        required
-        onChange={({ target }) => setPassword(target.value)}
-      />
-      <br />
-      <button type="submit">Login</button>
-    </form>
+    <div className="container align-center">
+      <form onSubmit={handleSubmit} className="col-md-4 col-md-offset-4">
+        <div className="form-group">
+          <input
+            type="text"
+            value={email}
+            placeholder="Enter your email"
+            required
+            onChange={({ target }) => setEmail(target.value)}
+            className="form-control"
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="password"
+            value={password}
+            placeholder="Enter your password"
+            required
+            onChange={({ target }) => setPassword(target.value)}
+            className="form-control"
+          />
+        </div>
+        <button type="submit" className="btn btn-primary">
+          Login
+        </button>
+      </form>
+    </div>
   );
 }
 

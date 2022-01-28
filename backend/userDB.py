@@ -120,8 +120,8 @@ def returnMessages(userData):
             message['message']=decMessage.decode('utf-8')
             message.pop('senderData')
             message.pop('recieverData')
+            message['id'] = str(message['date'])
             message['date'] = str(message['date'].time().strftime("%H:%M"))
-
             messageData.append(message)
         response = updateMessageStatus(userData)
         if response['status']==200:

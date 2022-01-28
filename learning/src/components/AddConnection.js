@@ -26,16 +26,18 @@ function AddConnection() {
     }
   };
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="email">Email: </label>
+    <form onSubmit={handleSubmit} className="form-inline">
       <input
         type="email"
         value={email}
         placeholder="Enter connection's email"
         required
         onChange={({ target }) => setEmail(target.value)}
+        className="form-control"
       />
-      <button type="submit">Add</button>
+      <button type="submit" className="btn btn-primary mb-2">
+        Add
+      </button>
     </form>
   );
 }

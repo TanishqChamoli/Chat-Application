@@ -2,16 +2,15 @@ import React from "react";
 
 function LogoutButton() {
   return (
-    <div>
-      <button
-        onClick={() => {
-          localStorage.removeItem("userData");
-          window.location.reload(false);
-        }}
-      >
-        Logout
-      </button>
-    </div>
+    <button
+      onClick={() => {
+        localStorage.removeItem("userData");
+        window.location.reload(false);
+      }}
+      className="btn btn-primary"
+    >
+      Logout
+    </button>
   );
 }
 

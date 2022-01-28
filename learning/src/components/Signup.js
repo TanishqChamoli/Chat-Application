@@ -21,9 +21,6 @@ function Signup() {
         password: password,
       },
     });
-    // setName("");
-    // setEmail("");
-    // setPassword("");
     if (response.data["status"] === 201) {
       alert("User Created");
       navigate("/login", { replace: true });
@@ -33,35 +30,43 @@ function Signup() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="name">Name: </label>
-      <input
-        type="text"
-        value={name}
-        placeholder="Enter your name"
-        required
-        onChange={({ target }) => setName(target.value)}
-      />
-      <br />
-      <label htmlFor="email">Email: </label>
-      <input
-        type="email"
-        value={email}
-        placeholder="Enter your email"
-        required
-        onChange={({ target }) => setEmail(target.value)}
-      />
-      <br />
-      <label htmlFor="password">Password: </label>
-      <input
-        type="password"
-        value={password}
-        placeholder="Enter password"
-        required
-        onChange={({ target }) => setPassword(target.value)}
-      />
-      <br />
-      <button type="submit">Create User</button>
+    <form
+      onSubmit={handleSubmit}
+      className="col-md-3 col-md-offset-4 align-center"
+    >
+      <div className="form-group">
+        <input
+          type="text"
+          value={name}
+          placeholder="Enter your name"
+          required
+          onChange={({ target }) => setName(target.value)}
+          className="form-control"
+        />
+      </div>
+      <div className="form-group">
+        <input
+          type="email"
+          value={email}
+          placeholder="Enter your email"
+          required
+          onChange={({ target }) => setEmail(target.value)}
+          className="form-control"
+        />
+      </div>
+      <div className="form-group">
+        <input
+          type="password"
+          value={password}
+          placeholder="Enter password"
+          required
+          onChange={({ target }) => setPassword(target.value)}
+          className="form-control"
+        />
+      </div>
+      <button type="submit" className="btn btn-primary">
+        Create User
+      </button>
     </form>
   );
 }

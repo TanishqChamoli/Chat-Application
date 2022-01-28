@@ -89,13 +89,16 @@ function Chatbox({ reciever }) {
     }
   }, [messages]);
 
+  useEffect(() => {
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+
   return (
-    <div className="chat-box">
-      {/* {console.count("counter")} */}
+    <div>
       {isLoading ? (
-        "Please wait loading messages"
-      ) : messages.length === 0 ? (
-        "No messages, Say Hello"
+        <p style={{ alignContent: "center" }}>Please wait loading messages</p>
       ) : (
         <ChatContent messages={messages} />
       )}

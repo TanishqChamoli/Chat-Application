@@ -10,6 +10,7 @@ function Connection({ name, email, setReciever }) {
         onClick={() => {
           setReciever(email);
         }}
+        className="btn btn-primary"
       >
         Open Chat
       </button>
