@@ -5,7 +5,8 @@ from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 import datetime
 
-dbConnection = pymongo.MongoClient("mongodb+srv://tanishq:tanishq@chat-messages.whb0n.mongodb.net/myFirstDatabase")
+connectionData = ""
+dbConnection = pymongo.MongoClient(connectionData)
 userDB = dbConnection['chat-application']['users']
 connectionsDB = dbConnection['chat-application']['connections']
 chatDB = dbConnection['chat-application']['messages']
