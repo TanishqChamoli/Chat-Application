@@ -46,13 +46,5 @@ def checkForMessage():
     output = checkMessages(userData)
     return output
 
-# @app.route('/identical-api/<currid>',methods=["GET"])
-# def newpage_api(currid):
-#     return jsonify(search(currid))
-
-# @app.route('/homologous-api/<currid>',methods=["GET"])
-# def homologous_page_api(currid):
-#     return jsonify(homologous(currid))
-
 if __name__ == '__main__':
     app.run(debug=True)
